@@ -17,13 +17,13 @@ if len(sys.argv) < 2:
     print_usage()
 
 args = sys.argv[1:]
-freq = int(args[0])
+freq = args[0]
 cmd_args=args[1:]
 
 # Build the mojitos command
 mojitos_cmd = ["mojitos", "-u"]
 mojitos_cmd += ["-f", freq]
-mojitos_cmd += ["-o", f"tmp/local_output/{output_file}"]
+mojitos_cmd += ["-o", output_file]
 mojitos_cmd += ["--"] + cmd_args
 
 print(f"Executing: {' '.join(mojitos_cmd)}")

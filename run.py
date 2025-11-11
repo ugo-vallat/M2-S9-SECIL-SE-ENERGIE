@@ -29,7 +29,7 @@ freq = args[0]
 cmd_args=args[1:]
 
 # Build the mojitos command
-mojitos_cmd = ["mojitos", "-u"]
+mojitos_cmd = ["mojitos", "-r"]
 mojitos_cmd += ["-f", freq]
 mojitos_cmd += ["-o", output_file]
 mojitos_cmd += ["--"] + cmd_args
@@ -48,9 +48,9 @@ except subprocess.CalledProcessError as e:
 end_time = time.time_ns()
 
 df = _read_csv(output_file)
+energy = df.iloc[:, 1:].sum().sum() / 1_000_000
 df["#timestamp_ns"] = (df["#timestamp"].astype(float) * 1e9).astype("int64")
 duration_ns = df["#timestamp_ns"].max() - df["#timestamp_ns"].min()
-energy = df.iloc[:, 1:].sum().sum() / 1_000_000
 pmax = energy / (duration_ns / 1e9)
 
 

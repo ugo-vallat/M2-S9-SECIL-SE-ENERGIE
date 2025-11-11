@@ -2,6 +2,8 @@
 import sys
 import subprocess
 import time
+import pandas as pd
+
 
 # Default values
 output_file = "tmp/local_output/mojitos_output"
@@ -11,6 +13,12 @@ cmd_args = []
 def print_usage():
     print("Usage: python3 script <freq> <cmd>")
     sys.exit(1)
+
+def _read_csv(filename):
+    df = pd.read_csv(filename, sep=' ', skipinitialspace=True)
+    if df.columns[-1].startswith('Unnamed'):
+        df.drop(columns=df.columns[-1:], axis=1, inplace=True)
+    return df
 
 
 if len(sys.argv) < 2:
@@ -39,5 +47,12 @@ except subprocess.CalledProcessError as e:
 
 end_time = time.time_ns()
 
+df = _read_csv(output_file)
+df["#timestamp_ns"] = (df["#timestamp"].astype(float) * 1e9).astype("int64")
+duration_ns = df["#timestamp_ns"].max() - df["#timestamp_ns"].min()
+energy = df.iloc[:, 1:].sum().sum() / 1_000_000
+pmax = energy / (duration_ns / 1e9)
+
+
 print("Duration (ns) | Energy (Joules) | Pmax (W)")
-print(f"{end_time-start_time}|TODO|TODO")
+print(f"{duration_ns:.6f}|{energy:.6f}|{pmax:.6f}")

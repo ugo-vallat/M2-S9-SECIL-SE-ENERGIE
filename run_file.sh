@@ -10,4 +10,4 @@ freq=10
 input="$1"
 output="mojitos_$2"
 
-./mojitos -u -f "$freq" -o "tmp/local_output/$output" -- sleep 5
+./mojitos -u -f $freq -o "tmp/local_output/$output" -- python3 $input

@@ -1,3 +1,4 @@
+#!/bin/bash
 # Execute this script in his directory !
 sudo-g5k echo ""
 
@@ -11,6 +12,11 @@ sudo sh -c 'echo 0 >/proc/sys/kernel/perf_event_paranoid'
 sudo chmod o+r /sys/class/powercap/intel-rapl/*/*
 sudo chmod o+r /sys/class/powercap/intel-rapl/*/*/*
 cd -
+
+# config directories
+mkdir -p tmp
+mkdir -p tmp/local_output
+mkdir -p tmp/scp_output
 
 
 

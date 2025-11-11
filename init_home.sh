@@ -1,3 +1,4 @@
+#!/bin/bash
 # Exexute this file with source command : "source .init_home"
 
 # bashrc

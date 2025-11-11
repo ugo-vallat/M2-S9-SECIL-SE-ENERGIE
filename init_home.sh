@@ -6,6 +6,8 @@ cp .bashrc ~/.bashrc
 source .bashrc
 
 # git
+eval "$(ssh-agent -s)"
+ssh-add ~/.ssh/cle
 git config --global user.name "Ugo VALLAT"
 git config --global user.email "ugo.vallat@univ-tlse3.fr"  
 git config --global core.editor "vim"

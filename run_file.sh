@@ -2,12 +2,12 @@
 
 # Vérifier le nombre d'arguments
 if [ "$#" -ne 2 ]; then
-    echo "Usage: $0 <input_file> <output_file>"
+    echo "Usage: $0 <output_file> <cmd>"
     exit 1
 fi
 
 freq=10
-input="$1"
-output="mojitos_$2"
+output="mojitos_$1"
+cmd=$2
 
-mojitos -u -f $freq -o "tmp/local_output/$output" -- python3 $input
+mojitos -u -f $freq -o "tmp/local_output/$output" -- $cmd

@@ -1,6 +1,8 @@
 import random
 
-nb_values = 1_000_000
+nb_values = 5_000_000
+seed = 42
+random.seed(seed)
 # Générer une liste de 10 000 valeurs aléatoires entre 0 et 1000
 values = [random.randint(0, 1000) for _ in range(nb_values)]
 

@@ -44,7 +44,7 @@ def run_test(freq, read_freq, cmd):
     pmax = energy_max / (1/read_freq)
 
 
-    print(f"{freq}|{duration_ns:.6f}|{energy:.6f}|{pmax:.6f}")
+    print(f"{freq}|{duration_ns/1e9:.9f}|{energy:.6f}|{pmax:.6f}")
 
 if len(sys.argv) < 2:
     print_usage()
@@ -63,7 +63,7 @@ mojitos_cmd += ["--"] + cmd_args
 
 
 
-print("Freq (Hz) | Duration (ns) | Energy (Joules) | Pmax (W)")
+print("Freq (Hz) | Duration (s) | Energy (Joules) | Pmax (W)")
 
 for run_freq in range (1_000_000, 3_900_000, 100_000):
     run_test(run_freq, int(freq), mojitos_cmd)

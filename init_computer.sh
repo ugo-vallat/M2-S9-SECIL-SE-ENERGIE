@@ -11,6 +11,7 @@ sudo cp bin/mojitos /usr/bin/
 sudo sh -c 'echo 0 >/proc/sys/kernel/perf_event_paranoid'
 sudo chmod o+r /sys/class/powercap/intel-rapl/*/*
 sudo chmod o+r /sys/class/powercap/intel-rapl/*/*/*
+sudo chmod 730 /sys/devices/system/cpu/cpu*/cpufreq/scaling_max_freq
 cd -
 
 # config directories

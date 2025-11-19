@@ -1,7 +1,7 @@
 import matplotlib.pyplot as plt
 import numpy as np
 
-taille = 200
+taille = 800
 xmin, xmax = -1, 1
 ymin, ymax = -1, 1
 iterationmax = 100
@@ -23,7 +23,7 @@ for line in range(taille):
             if i>iterationmax and (x**2+y**2)<=4:
                 pixels[col,line] = (0,0,0)
             else:
-                pixels[col,line] = ((4*i)%256,2*i,(6*i)%256)
+                pixels[col,line] = ((4*i)%256,(2*i)%256,(6*i)%256)
 
 plt.imshow(pixels)
 plt.show(block=True) 

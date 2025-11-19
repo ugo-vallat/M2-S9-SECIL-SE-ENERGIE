@@ -65,5 +65,5 @@ mojitos_cmd += ["--"] + cmd_args
 
 print("Freq (Hz) | Duration (s) | Energy (Joules) | Pmax (W)")
 
-for run_freq in range (1_000_000, 3_900_000, 100_000):
+for run_freq in range (1_100_000, 3_900_001, 700_000):
     run_test(run_freq, int(freq), mojitos_cmd)

@@ -7,11 +7,11 @@
 
 
 
-#define NUM_THREADS 8      // Nombre de threads
+#define NUM_THREADS 18      // Nombre de threads
 #define BLOCK_SIZE  1024      // Taille d'un bloc
 #define IMG_DIM     10000
 #define IMG_SIZE    (IMG_DIM*IMG_DIM)     
-#define ITE_MAX     1000     
+#define ITE_MAX     10000     
 #define XMIN        ((double)(-1.0))
 #define XMAX        ((double)(1.0))
 #define YMIN        ((double)(-1.0))
@@ -47,10 +47,12 @@ void* worker(void *arg) {
 
     unsigned index, ite;
     double x,y, x2, y2, tmp;
-    long long t_init = 0, t_for = 0, t_mem = 0, t_start;
+    // long long t_init = 0, t_for = 0, t_mem = 0, t_all = 0, t_start;
+    
+    // t_start = get_time_microseconds();
+
     while (1) {
         
-        // t_start = get_time_microseconds();
         // Récupération du prochain bloc à traiter
         // pthread_mutex_lock(&block_mutex);
         // start_index = next_block * BLOCK_SIZE;
@@ -87,7 +89,7 @@ void* worker(void *arg) {
             // t_for += get_time_microseconds() - t_start;
             // t_start = get_time_microseconds();
 
-            if (ite < ITE_MAX || (x*x + y*y) > 4.0) {
+            if (ite < ITE_MAX || (x2 + y2) > 4.0) {
                 img[3*index] = (unsigned char)((4 * ite) % 256);
                 img[3*index+1] = (unsigned char)((2 * ite) % 256);
                 img[3*index+2] = (unsigned char)((6 * ite) % 256);
@@ -101,16 +103,17 @@ void* worker(void *arg) {
         end_index = start_index + BLOCK_SIZE;
         
     }
+    // t_all += get_time_microseconds() - t_start;
 
-    // printf("[END] thread(%d) : t_init = %lld, t_for = %lld, t_mem = %lld\n", id, t_init, t_for, t_mem);
+    // printf("[END] thread(%d) : t_all = %lld\n", id, t_all);
 
     return NULL;
 }
 
 int main(void) {
-    long long start = get_time_microseconds();
+    // long long start = get_time_microseconds();
 
-    printf("[START] main\n");
+    // printf("[START] main\n");
     int i;
 
     // Préparation des threads
@@ -144,8 +147,8 @@ int main(void) {
     // Libération des ressources
     // pthread_mutex_destroy(&block_mutex);
 
-    long long end = get_time_microseconds();
-    printf("[END] t = %lld ys\n", end-start);
+    // long long end = get_time_microseconds();
+    // printf("[END] t = %lld ys\n", end-start);
 
     return EXIT_SUCCESS;
 }

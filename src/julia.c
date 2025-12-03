@@ -7,9 +7,9 @@
 
 
 
-#define NUM_THREADS 18      // Nombre de threads
+#define NUM_THREADS 32      // Nombre de threads
 #define BLOCK_SIZE  1024      // Taille d'un bloc
-#define IMG_DIM     10
+#define IMG_DIM     10000
 #define IMG_SIZE    (IMG_DIM*IMG_DIM)     
 #define ITE_MAX     10000     
 #define XMIN        ((double)(-1.0))
@@ -133,16 +133,6 @@ int main(void) {
     for (i = 0; i < NUM_THREADS; i++) {
         pthread_join(threads[i], NULL);
     }
-
-    // Affichage du résultat
-    // printf("Tableau après incrémentation :\n");
-    // for (i = 0; i < IMG_SIZE; i++) {
-    //     if (i%IMG_DIM == 0) {
-    //         printf("\n");
-    //     }
-    //     printf("%d,%d,%d ", img[3*i], img[3*i+1], img[3*i+2]);
-    // }
-    // printf("\n");
 
     // Libération des ressources
     // pthread_mutex_destroy(&block_mutex);

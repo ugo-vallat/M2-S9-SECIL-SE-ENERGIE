@@ -15,3 +15,7 @@ Algos avec perte :
 - moyenne par blocks
 - suppression sensibilité faible
 - 
+
+Pour chacun, mesurer :
+- rapport `taille / (temps de calcul + temps de décompression)`  
+- rapport `taille / (énergie de calcul + énergie de décompression)`  

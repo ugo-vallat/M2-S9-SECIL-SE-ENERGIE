@@ -71,8 +71,8 @@ void* worker(void *arg) {
                 x2=x*x;
                 y2=y*y;
             }
-
-            if (x2 + y2 > 4.0) {
+            
+            if (ite < ITE_MAX || (x2 + y2) > 4.0) {
                 img[index] = (unsigned int) ((4 * ite) & 0xFF) << 16 | ((2 * ite) & 0xFF) << 8 | ((6 * ite) & 0xFF);
             }
 

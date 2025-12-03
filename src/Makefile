@@ -1,12 +1,20 @@
 CC=gcc
 COMP_FLAG=-O0
-LIBS=-pthread
-all:julia
+LIBS=-pthread -lpng
+APP_SRC=algos.c \
+		util_png.c \
+		main.c
 
+
+APP_OBJ = $(APP_SRC:%.c=%.o)
+
+all:julia app
 
 julia : julia.o
 	$(CC) -o $@ $^ $(LIBS)
 
+app : $(APP_OBJ)
+	$(CC) -o $@ $^ $(LIBS)
 
 %.o : %.c
 	$(CC) $(COMP_FLAG) -o $@ -c $<

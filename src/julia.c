@@ -7,8 +7,8 @@
 
 
 
-#define NUM_THREADS 32      // Nombre de threads
-#define BLOCK_SIZE  1024      // Taille d'un bloc
+#define NUM_THREADS 36      // Nombre de threads
+#define BLOCK_SIZE  (1<<10)      // Taille d'un bloc
 #define IMG_DIM     10000
 #define IMG_SIZE    (IMG_DIM*IMG_DIM)     
 #define ITE_MAX     10000     
@@ -20,7 +20,7 @@
 #define B           ((double)(0.156))
 
 
-unsigned char img[IMG_SIZE*3] __attribute__((aligned(64))) = {0};
+unsigned char img[IMG_SIZE*3] __attribute__((aligned(16))) = {0};
 
 
 
@@ -90,9 +90,9 @@ void* worker(void *arg) {
             // t_start = get_time_microseconds();
 
             if (ite < ITE_MAX || (x2 + y2) > 4.0) {
-                img[3*index] = (unsigned char)((4 * ite) % 256);
-                img[3*index+1] = (unsigned char)((2 * ite) % 256);
-                img[3*index+2] = (unsigned char)((6 * ite) % 256);
+                img[3*index] = (unsigned char)((4 * ite) & 0xFF);
+                img[3*index+1] = (unsigned char)((2 * ite) & 0xFF);
+                img[3*index+2] = (unsigned char)((6 * ite) & 0xFF);
             }
 
             // t_mem += get_time_microseconds() - t_start;

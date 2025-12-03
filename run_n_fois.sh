@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
 
-# Vérification des arguments
 if [ "$#" -lt 2 ]; then
     echo "Usage: $0 <nb_iterations> <programme> [args...]"
     exit 1
@@ -12,20 +11,28 @@ CMD=("$@")
 
 total=0
 
-echo "Exécution de : ${CMD[*]}"
-echo "Nombre d'itérations : $N"
+echo "Programme : ${CMD[*]}"
+echo "Itérations : $N"
 echo
 
 for ((i=1; i<=N; i++)); do
-    # On récupère uniquement le temps réel en secondes (%e)
-    t=$(/usr/bin/time -f "%e" "${CMD[@]}" 2>&1 >/dev/null)
-    echo "Run $i : $t s"
+    start=$(date +%s.%N)       # timestamp haute précision
+    "${CMD[@]}" >/dev/null 2>&1
+    end=$(date +%s.%N)
 
-    # Addition (float)
-    total=$(echo "$total + $t" | bc -l)
+    # Calcul de la durée
+    duration=$(echo "$end - $start" | bc -l)
+
+    # Convertir en microsecondes si tu veux
+    us=$(echo "$duration * 1000000" | bc -l)
+
+    echo "Run $i : $us µs"
+
+    total=$(echo "$total + $us" | bc -l)
 done
 
 moyenne=$(echo "$total / $N" | bc -l)
 
 echo
-echo "Temps moyen : $moyenne s"
+echo " > Temps moyen : $moyenne µs"
+

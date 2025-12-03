@@ -53,7 +53,7 @@ void Fractal::op(size_t start_width, size_t start_height, size_t end_width, size
 
             }
             #ifdef PARAop
-            if (i > this->iteration)
+            if (i > this->iteration && ((x*x) + (y*y))<=4)
                 pixels[width * line + col] = 0xffffffff;
             else
                 pixels[width * line + col] = set_color((4*i)%256, (2*i)%256, (6*i)%256);

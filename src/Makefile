@@ -1,5 +1,5 @@
 CC=gcc
-COMP_FLAG=-O3
+COMP_FLAG=-O0
 LIBS=-pthread
 all:julia
 

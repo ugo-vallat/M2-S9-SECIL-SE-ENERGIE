@@ -1,5 +1,5 @@
 CC= g++
-FLAGS= -g -O3
+FLAGS= -g -O0
 INC= -I.
 LIB= -fopenmp
 SRC= fractal.cpp	\

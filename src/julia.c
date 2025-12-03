@@ -65,14 +65,14 @@ void* worker(void *arg) {
             y2 = y*y;
             while (ite <= ITE_MAX && (x2 + y2) <= 4.0) {
                 tmp = x2 - y2 + A;
-                y = 2.0 * x * y + B;
+                y =  2 * x * y + B;
                 x = tmp;
                 ite++;
                 x2=x*x;
                 y2=y*y;
             }
 
-            if (ite < ITE_MAX || (x2 + y2) > 4.0) {
+            if (x2 + y2 > 4.0) {
                 img[index] = (unsigned int) ((4 * ite) & 0xFF) << 16 | ((2 * ite) & 0xFF) << 8 | ((6 * ite) & 0xFF);
             }
 

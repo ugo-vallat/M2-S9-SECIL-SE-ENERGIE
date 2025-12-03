@@ -20,7 +20,7 @@
 #define B           ((double)(0.156))
 
 
-unsigned char img[IMG_SIZE*3] __attribute__((aligned(16))) = {0};
+unsigned int img[IMG_SIZE] __attribute__((aligned(16))) = {0};
 
 
 
@@ -37,28 +37,15 @@ long long get_time_microseconds() {
     return (long long)tv.tv_sec * 1000000LL + tv.tv_usec;
 }
 
-
-// Fonction exécutée par chaque thread
 void* worker(void *arg) {
     int id = *((int*)arg);
-    // printf("[START] thread\n");
     unsigned start_index = id*BLOCK_SIZE;
     unsigned end_index = start_index + BLOCK_SIZE;
 
     unsigned index, ite;
     double x,y, x2, y2, tmp;
-    // long long t_init = 0, t_for = 0, t_mem = 0, t_all = 0, t_start;
-    
-    // t_start = get_time_microseconds();
 
     while (1) {
-        
-        // Récupération du prochain bloc à traiter
-        // pthread_mutex_lock(&block_mutex);
-        // start_index = next_block * BLOCK_SIZE;
-        // next_block++;
-        // pthread_mutex_unlock(&block_mutex);
-
         
         if (start_index >= IMG_SIZE) {
             break;
@@ -67,7 +54,7 @@ void* worker(void *arg) {
             end_index = IMG_SIZE;
         }
 
-        // t_init += get_time_microseconds() - t_start;
+
 
         for (index = start_index; index < end_index; index++) {
             ite = 1;
@@ -76,7 +63,6 @@ void* worker(void *arg) {
             
             x2 = x*x;
             y2 = y*y;
-            // t_start = get_time_microseconds();
             while (ite <= ITE_MAX && (x2 + y2) <= 4.0) {
                 tmp = x2 - y2 + A;
                 y = 2.0 * x * y + B;
@@ -86,16 +72,10 @@ void* worker(void *arg) {
                 y2=y*y;
             }
 
-            // t_for += get_time_microseconds() - t_start;
-            // t_start = get_time_microseconds();
-
             if (ite < ITE_MAX || (x2 + y2) > 4.0) {
-                img[3*index] = (unsigned char)((4 * ite) & 0xFF);
-                img[3*index+1] = (unsigned char)((2 * ite) & 0xFF);
-                img[3*index+2] = (unsigned char)((6 * ite) & 0xFF);
+                img[index] = (unsigned int) ((4 * ite) & 0xFF) << 16 | ((2 * ite) & 0xFF) << 8 | ((6 * ite) & 0xFF);
             }
 
-            // t_mem += get_time_microseconds() - t_start;
 
             
         }
@@ -103,12 +83,9 @@ void* worker(void *arg) {
         end_index = start_index + BLOCK_SIZE;
         
     }
-    // t_all += get_time_microseconds() - t_start;
-
-    // printf("[END] thread(%d) : t_all = %lld\n", id, t_all);
-
     return NULL;
 }
+
 
 int main(void) {
     // long long start = get_time_microseconds();

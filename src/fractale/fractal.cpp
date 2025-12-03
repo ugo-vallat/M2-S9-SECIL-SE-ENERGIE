@@ -1,4 +1,5 @@
 #include "fractal.hpp"
+#include <cstdio>
 #include <stdexcept>
 #include <cmath>
 #include <cassert>
@@ -180,6 +181,14 @@ void Fractal::op_block(size_t id, size_t block_size) {
     size_t end_pos_y = by + 1;
 
     op(start_pos_x, start_pos_y, end_pos_x, end_pos_y);
+}
+
+void Fractal::create_img() {
+    FILE *fd = fopen("output.julia", "w");
+    for(int i = 0; i < (this->height*this->height); i++) {
+        fprintf(fd, "%3u|%3u|%3u\n", (this->pixels[i]>>24)&0xFF, (this->pixels[i]>>16)&0xFF, (this->pixels[i]>>8)&0xFF);
+    }
+    fclose(fd);
 }
 
 void Fractal::get_id(size_t block_size) {

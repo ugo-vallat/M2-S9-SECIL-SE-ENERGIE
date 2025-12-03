@@ -69,7 +69,7 @@ int main(int ac, char**av) {
         fract.generate_img_openmp();
     #endif
 
-    //fract.create_img();
+    // fract.create_img();
 
     //SDL_Quit();
 

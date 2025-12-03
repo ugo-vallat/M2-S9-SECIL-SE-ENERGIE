@@ -10,6 +10,7 @@ class Fractal {
         Fractal();
         Fractal(size_t size = 200, size_t iter = 100);
         ~Fractal();
+        void create_img();
         void op(size_t start_width, size_t start_height, size_t end_width, size_t end_height);
         void opmp(size_t start_width, size_t start_height, size_t end_width, size_t end_height);
         void generate_img_seq();

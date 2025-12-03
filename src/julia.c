@@ -9,7 +9,7 @@
 
 #define NUM_THREADS 18      // Nombre de threads
 #define BLOCK_SIZE  1024      // Taille d'un bloc
-#define IMG_DIM     10000
+#define IMG_DIM     10
 #define IMG_SIZE    (IMG_DIM*IMG_DIM)     
 #define ITE_MAX     10000     
 #define XMIN        ((double)(-1.0))
@@ -20,7 +20,7 @@
 #define B           ((double)(0.156))
 
 
-char img[IMG_SIZE*3] __attribute__((aligned(64)));
+unsigned char img[IMG_SIZE*3] __attribute__((aligned(64))) = {0};
 
 
 
@@ -64,7 +64,7 @@ void* worker(void *arg) {
             break;
         }
         if(end_index >= IMG_SIZE) {
-            end_index = IMG_SIZE - 1;
+            end_index = IMG_SIZE;
         }
 
         // t_init += get_time_microseconds() - t_start;
@@ -149,6 +149,12 @@ int main(void) {
 
     // long long end = get_time_microseconds();
     // printf("[END] t = %lld ys\n", end-start);
+
+    // FILE *fd = fopen("output.julia", "w");
+    // for(int i = 0; i < IMG_SIZE; i++) {
+    //     fprintf(fd, "%3u|%3u|%3u\n", img[3*i], img[3*i+1], img[3*i+2]);
+    // }
+    // fclose(fd);
 
     return EXIT_SUCCESS;
 }

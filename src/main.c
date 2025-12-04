@@ -16,7 +16,7 @@ char file_out[512];
 
 void usage(char *exec) {
     printf("usage : %s <act> <algo> <file_path>\n", exec);
-    printf("\taglo in NO_COMP:0, LINEAR:1, BLOCK:2, SIMETRY:3, DICO:4, NO_PIXEL:5, MEAN:6, FOURIER =7\n");
+    printf("\taglo in NO_COMP:0, LINEAR:1, RLE_2D:2, SIMETRY:3, DICO:4, NO_PIXEL:5, MEAN:6, FOURIER =7\n");
     printf("\tact in [gen,read]\n");
     exit(1);
 }
@@ -56,11 +56,14 @@ void gen_image() {
             no_comp_save(file);
             printf("[MAIN] save OK\n");
             break;
-        case ALGO_LINEAR:
-            fprintf(stderr, "[LINEAR] algo not implemented yet\n");
+        case ALGO_RLE_1D:
+            rle_1d_gen();
+            printf("[MAIN] gen OK\n");
+            rle_1d_save(file);
+            printf("[MAIN] save OK\n");
             break;
-        case ALGO_BLOCK:
-            fprintf(stderr, "[BLOCK] algo not implemented yet\n");
+        case ALGO_RLE_2D:
+            fprintf(stderr, "[RLE_2D] algo not implemented yet\n");
             break;
         case ALGO_SIMETRY:
             fprintf(stderr, "[SIMETRY] algo not implemented yet\n");
@@ -68,7 +71,7 @@ void gen_image() {
         case ALGO_DICO:
             fprintf(stderr, "[DICO] algo not implemented yet\n");
             break;
-        case ALGO_NO_PIXEL:
+        case ALGO_NO_ZERO:
             fprintf(stderr, "[NO_PIXEL] algo not implemented yet\n");
             break;
         case ALGO_MEAN:
@@ -87,11 +90,10 @@ void read_image() {
         case ALGO_NO_COMP:
             no_comp_read(file, file_out);
             break;
-        case ALGO_LINEAR:
-            fprintf(stderr, "[LINEAR] algo not implemented yet\n");
-            break;
-        case ALGO_BLOCK:
-            fprintf(stderr, "[BLOCK] algo not implemented yet\n");
+        case ALGO_RLE_1D:
+            rle_1d_read(file, file_out);break;
+        case ALGO_RLE_2D:
+            fprintf(stderr, "[RLE_2D] algo not implemented yet\n");
             break;
         case ALGO_SIMETRY:
             fprintf(stderr, "[SIMETRY] algo not implemented yet\n");
@@ -99,7 +101,7 @@ void read_image() {
         case ALGO_DICO:
             fprintf(stderr, "[DICO] algo not implemented yet\n");
             break;
-        case ALGO_NO_PIXEL:
+        case ALGO_NO_ZERO:
             fprintf(stderr, "[NO_PIXEL] algo not implemented yet\n");
             break;
         case ALGO_MEAN:

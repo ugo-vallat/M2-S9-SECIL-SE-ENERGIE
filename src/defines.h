@@ -11,7 +11,7 @@
 #define B           ((double)(0.156))
 
 
-#define IMG_DIM     10000
+#define IMG_DIM     1000
 #define IMG_SIZE    (IMG_DIM*IMG_DIM)    
 
 
@@ -22,13 +22,17 @@ void no_comp_gen(void);
 void no_comp_save(char *dst);
 void no_comp_read(char *read_file, char *output_file);
 
-/* ALGO_LINEAR */
+/* ALGO_RLE_1D */
 
-void linear_gen(void);
-void linear_save(char *dst);
-void linear_read(char *read_file, char *output_file);
+void rle_1d_gen(void);
+void rle_1d_save(char *dst);
+void rle_1d_read(char *read_file, char *output_file);
 
-/* ALGO_BLOCK */
+/* ALGO_RLE_2D */
+
+void rle_2d_gen(void);
+void rle_2d_save(char *dst);
+void rle_2d_read(char *read_file, char *output_file);
 
 /* ALGO_SIMETRY */
 
@@ -44,13 +48,14 @@ void linear_read(char *read_file, char *output_file);
 
 typedef enum {
     ALGO_NO_COMP =0,
-    ALGO_LINEAR  =1,
-    ALGO_BLOCK   =2,
+    ALGO_RLE_1D  =1,
+    ALGO_RLE_2D  =2,
     ALGO_SIMETRY =3,
     ALGO_DICO    =4,
-    ALGO_NO_PIXEL=5,
+    ALGO_NO_ZERO =5,
     ALGO_MEAN    =6,
     ALGO_FOURIER =7,
+    ALGO_TREE_TRUC,
     MAX_ALOG=8
 } Algo_t;
 

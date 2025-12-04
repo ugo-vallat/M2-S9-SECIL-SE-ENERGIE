@@ -5,10 +5,11 @@
 #include "util_png.h"
 
 #define NO_COMP_IMG img_rgb_hexa
-#define LINEAR_IMG img_i_linear
+#define RLE_1D_IMG img_rle_1d
 
 unsigned char img_rgb_hexa[IMG_SIZE*3] = {0};
-unsigned int img_i_linear[IMG_SIZE*2] = {0};
+unsigned int img_rle_1d[IMG_SIZE*2] = {0};
+unsigned int img_rle_1d_size = 0;
 
 
 
@@ -111,45 +112,51 @@ void no_comp_read(char *read_file, char *output_file) {
 
 
 
-/*________________ LINEAR ________________*/
+/*________________ RLE 1D ________________*/
 
-void linear_gen(void) {
-    unsigned index, ite, cur_ite, cur_pos, count;
+void rle_1d_gen(void) {
+    unsigned int index, ite, cur_ite, cur_pos, count;
 
-    count = 0;
-    cur_ite = 0;
+    count = 1;
+    cur_ite = compute_pixel(0);
     cur_pos = 0;
-    for (index = 0; index < IMG_SIZE; index++) {
+    for (index = 1; index < IMG_SIZE; index++) {
         ite = compute_pixel(index);
         if (ite == cur_ite) {
             count++;
         } else {
-            LINEAR_IMG[cur_pos + 0] = cur_ite;
-            LINEAR_IMG[cur_pos + 1] = count;
+            RLE_1D_IMG[cur_pos + 0] = count;
+            RLE_1D_IMG[cur_pos + 1] = cur_ite;
+            printf("[%d,%d]\n", count, cur_ite);
             count = 1;
             cur_ite = ite;
             cur_pos+=2;
         }
     }
-    LINEAR_IMG[cur_pos + 0] = cur_ite;
-    LINEAR_IMG[cur_pos + 1] = count;
+    RLE_1D_IMG[cur_pos + 0] = count;
+    RLE_1D_IMG[cur_pos + 1] = cur_ite;
+    cur_pos+=2;
+
+    img_rle_1d_size = cur_pos / 2;
 }
 
-void linear_save(char *dst) {
+void rle_1d_save(char *dst) {
     FILE *fd = fopen(dst, "w");
 
     unsigned int dim = IMG_DIM;
-    fwrite(&dim, 1, sizeof(dim), fd);
-    fwrite(NO_COMP_IMG, sizeof(unsigned char), sizeof(NO_COMP_IMG), fd);
+    fwrite(&dim, sizeof(dim), 1, fd);
+    fwrite(&img_rle_1d_size, sizeof(img_rle_1d_size), 1, fd);
+    fwrite(RLE_1D_IMG, sizeof(unsigned int), img_rle_1d_size*2, fd);
 
     fclose(fd);
 }
 
 
 
-void linear_read(char *read_file, char *output_file) {
+void rle_1d_read(char *read_file, char *output_file) {
     unsigned char (**img_png);
-    unsigned char *img;
+    unsigned int *img;
+    
     FILE *fd_in;
     unsigned int dim;
     size_t img_size;
@@ -161,18 +168,35 @@ void linear_read(char *read_file, char *output_file) {
         exit(1);
     }
 
-    printf("dim : %u\n", dim); fflush(stdout);
-    img_size = dim*dim*3;
-    img = malloc(img_size*sizeof(unsigned char));
+    if(fread(&img_rle_1d_size, sizeof(img_rle_1d_size), 1, fd_in) != 1) {
+        fprintf(stderr, "Failed to read input\n");
+        exit(1);
+    }
 
-    if (fread(img, sizeof(unsigned char), img_size, fd_in) != img_size) {
+    printf("dim = %d | size = %d\n", dim, img_rle_1d_size);
+
+    img_size = img_rle_1d_size*2;
+    img = malloc(img_size*sizeof(unsigned int));
+
+    if (fread(img, sizeof(unsigned int), img_size, fd_in) != img_size) {
         fprintf(stderr, "Failed to read input\n");
         exit(1);
     }
 
     img_png = malloc(dim * sizeof(unsigned char*));
+    unsigned int cur = 0;
     for(unsigned i = 0; i < dim; i++) {
-        img_png[i] = &(img[i*dim*3]);
+        img_png[i] = malloc(sizeof(unsigned char) * dim * 3);
+        for (unsigned j = 0; j < dim; j++) {
+            printf("[%d,%d]\n", img[cur], img[cur+1]);
+            img_png[i][j*3+0] = (unsigned char) ((4 * img[cur+1]) & 0xFF);
+            img_png[i][j*3+1] = (unsigned char) ((2 * img[cur+1]) & 0xFF);
+            img_png[i][j*3+2] = (unsigned char) ((6 * img[cur+1]) & 0xFF);
+            img[cur] -= 1;
+            if (img[cur] == 0) {
+                cur+=2;
+            }
+        }
     }
 
     fclose(fd_in);
@@ -182,3 +206,11 @@ void linear_read(char *read_file, char *output_file) {
 
     return;
 }
+
+
+/*________________ BLOCK ________________*/
+
+
+void block_gen(void);
+void block_save(char *dst);
+void block_read(char *read_file, char *output_file);

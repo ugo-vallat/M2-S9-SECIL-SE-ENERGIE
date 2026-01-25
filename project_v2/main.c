@@ -99,12 +99,12 @@ long long get_time_microseconds() {
 int main(int argc, char *argv[]) {
     get_args(argc, argv);
 
-    printf("[GEN] start...");fflush(stdout);
-    long long start = get_time_microseconds();
+    // printf("[GEN] start...");fflush(stdout);
+    // long long start = get_time_microseconds();
     gen_image();
-    long long end = get_time_microseconds();
-    printf("OK\n");
-    printf("Duration : %lldms\n", (end - start) / 1000 );
+    // long long end = get_time_microseconds();
+    // printf("OK\n");
+    // printf("Duration : %lldms\n", (end - start) / 1000 );
 
     return 0;
 }

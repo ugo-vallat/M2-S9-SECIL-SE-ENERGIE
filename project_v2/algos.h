@@ -5,7 +5,7 @@
 
 #define IMG_DIM     10000
 #define IMG_SIZE    (IMG_DIM*IMG_DIM)     
-#define ITE_MAX     10     
+#define ITE_MAX     1000     
 #define XMIN        ((double)(-1.0))
 #define XMAX        ((double)(1.0))
 #define YMIN        ((double)(-1.0))

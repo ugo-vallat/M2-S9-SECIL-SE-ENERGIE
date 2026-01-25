@@ -22,10 +22,8 @@ def _read_csv(filename):
     return df
 
 def run_one(read_freq, cmd) :
-    global ITE
+    print(cmd)
     try:
-        # print(f"Executing: {freq_cmd}")
-        
         subprocess.run(cmd, check=True)
     except subprocess.CalledProcessError as e:
         print(f"Error: Command failed with exit code {e.returncode}")
@@ -41,14 +39,19 @@ def run_one(read_freq, cmd) :
 
     return (duration_ns, energy, pmax)
 
+
+
 def run_test(freq, read_freq, algo, cmd):
+    global ITE
+
     freq_cmd = f"echo {freq} | tee /sys/devices/system/cpu/cpufreq/policy*/scaling_max_freq > /dev/null"
     try:
-        subprocess.run(cmd, check=True)
+        subprocess.run(freq_cmd, shell=True, check=False)
     except subprocess.CalledProcessError as e:
         print(f"Error: Command failed with exit code {e.returncode}")
         sys.exit(e.returncode)
 
+    print("Freq config")
     duration_ns=0
     energy=0
     pmax=0
@@ -74,7 +77,7 @@ def run_test(freq, read_freq, algo, cmd):
 
 # Build the mojitos command
 base_cmd = ["mojitos", "-r"]
-base_cmd += ["-f", FREQ]
+base_cmd += ["-f", f"{FREQ}"]
 base_cmd += ["-o", output_file]
 base_cmd += ["--", "./app"]
 
@@ -87,8 +90,7 @@ algos = [
     "ALGO_STATIC_3D_CHAR",
     "ALGO_ALLOC_1D_CHAR",
     "ALGO_ALLOC_1D_U32",
-    "ALGO_ALLOC_3D_CHAR",
-    "ALGO_STATIC_1D_CHAR_OPTI"
+    "ALGO_ALLOC_3D_CHAR"
 ]
 
 

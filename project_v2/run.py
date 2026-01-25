@@ -11,18 +11,18 @@ FREQ = 100
 ITE = 5
 cmd_args = []
 
-def print_usage():
-    print("Usage: python3 script <cmd>")
-    sys.exit(1)
+# def print_usage():
+#     print("Usage: python3 script <cmd>")
+#     sys.exit(1)
 
 def _read_csv(filename):
-    global ITE
     df = pd.read_csv(filename, sep=' ', skipinitialspace=True)
     if df.columns[-1].startswith('Unnamed'):
         df.drop(columns=df.columns[-1:], axis=1, inplace=True)
     return df
 
 def run_one(read_freq, cmd) :
+    global ITE
     try:
         # print(f"Executing: {freq_cmd}")
         
@@ -65,12 +65,12 @@ def run_test(freq, read_freq, algo, cmd):
 
     print(f"{freq}|{algo}|{duration_ns/1e9:.9f}|{energy:.6f}|{pmax:.6f}")
 
-if len(sys.argv) < 2:
-    print_usage()
+# if len(sys.argv) < 2:
+#     print_usage()
 
-args = sys.argv[1:]
-freq = args[0]
-cmd_args=args[1:]
+# args = sys.argv[1:]
+# freq = args[0]
+# cmd_args=args[1:]
 
 # Build the mojitos command
 base_cmd = ["mojitos", "-r"]

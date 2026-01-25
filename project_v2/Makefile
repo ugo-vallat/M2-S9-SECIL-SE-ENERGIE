@@ -17,4 +17,4 @@ app : $(APP_OBJ)
 	$(CC) $(COMP_FLAG) -o $@ -c $<
 
 clean:
-	rm -rf *.o julia
+	rm -rf *.o app

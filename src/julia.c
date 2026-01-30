@@ -7,7 +7,7 @@
 
 
 
-#define NUM_THREADS 16      // Nombre de threads
+#define NUM_THREADS 32      // Nombre de threads
 #define IMG_DIM     10000
 
 #define BLOCK_SIZE  (IMG_DIM*10)      // Taille d'un bloc
@@ -116,9 +116,9 @@ void* worker(void *arg) {
 
 
 int main(void) {
-    long long start = get_time_microseconds();
+    // long long start = get_time_microseconds();
 
-    printf("[START] main\n");
+    // printf("[START] main\n");
     int i;
 
     // Préparation des threads
@@ -141,8 +141,8 @@ int main(void) {
     // Libération des ressources
     // pthread_mutex_destroy(&block_mutex);
 
-    long long end = get_time_microseconds();
-    printf("[END] t = %lld ys\n", end-start);
+    // long long end = get_time_microseconds();
+    // printf("[END] t = %lld ys\n", end-start);
 
     // FILE *fd = fopen("output_ref.julia", "w");
     // for(int i = 0; i < IMG_SIZE; i++) {

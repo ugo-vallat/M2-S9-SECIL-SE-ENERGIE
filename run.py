@@ -7,12 +7,8 @@ import pandas as pd
 
 # Default values
 output_file = "tmp/local_output/mojitos_output"
-freq = None
-cmd_args = []
-
-def print_usage():
-    print("Usage: python3 script <freq> <cmd>")
-    sys.exit(1)
+read_freq = 100000
+cpu_freq = 3_900_000
 
 def _read_csv(filename):
     df = pd.read_csv(filename, sep=' ', skipinitialspace=True)
@@ -20,21 +16,14 @@ def _read_csv(filename):
         df.drop(columns=df.columns[-1:], axis=1, inplace=True)
     return df
 
-def run_test(freq, read_freq, cmd):
-    # Execute the command
-    start_time = time.time_ns()
 
-    freq_cmd = f"echo {freq} | tee /sys/devices/system/cpu/cpufreq/policy*/scaling_max_freq > /dev/null"
-
+def run_one(read_freq, cmd) :
     try:
-        # print(f"Executing: {freq_cmd}")
-        subprocess.run(freq_cmd, shell=True, check=False)
         subprocess.run(cmd, check=True)
     except subprocess.CalledProcessError as e:
         print(f"Error: Command failed with exit code {e.returncode}")
         sys.exit(e.returncode)
 
-    end_time = time.time_ns()
 
     df = _read_csv(output_file)
     energy = df.iloc[:, 1:].sum().sum() / 1e6
@@ -43,27 +32,40 @@ def run_test(freq, read_freq, cmd):
     duration_ns = df["#timestamp_ns"].max() - df["#timestamp_ns"].min()
     pmax = energy_max / (1/read_freq)
 
+    return (duration_ns, energy, pmax)
 
-    print(f"{freq}|{duration_ns/1e9:.9f}|{energy:.6f}|{pmax:.6f}")
+def run_test(cpu_freq, read_freq, cmd):
+    global ITE
 
-if len(sys.argv) < 2:
-    print_usage()
+    freq_cmd = f"echo {cpu_freq} | tee /sys/devices/system/cpu/cpufreq/policy*/scaling_max_freq > /dev/null"
+    try:
+        subprocess.run(freq_cmd, shell=True, check=False)
+    except subprocess.CalledProcessError as e:
+        print(f"Error: Command failed with exit code {e.returncode}")
+        sys.exit(e.returncode)
 
-args = sys.argv[1:]
-freq = args[0]
-cmd_args=args[1:]
+    duration_ns=0
+    energy=0
+    pmax=0
+    
+    for _ in range(ITE):
+        tmp_duration_ns, tmp_energy, tmp_pmax = run_one(read_freq, cmd)
+        duration_ns += tmp_duration_ns
+        energy += tmp_energy
+        pmax += tmp_pmax
+
+    duration_ns = duration_ns / ITE
+    energy = energy / ITE
+    pmax = pmax / ITE
+
+    print(f"{cpu_freq}|{duration_ns/1e9:.9f}|{energy:.6f}|{pmax:.6f}")
 
 # Build the mojitos command
 mojitos_cmd = ["mojitos", "-r"]
-mojitos_cmd += ["-f", freq]
+mojitos_cmd += ["-f", f"{read_freq}"]
 mojitos_cmd += ["-o", output_file]
-mojitos_cmd += ["--"] + cmd_args
-
-# print(f"Executing: {' '.join(mojitos_cmd)}")
-
+mojitos_cmd += ["--", "./src/julia"]
 
 
 print("Freq (Hz) | Duration (s) | Energy (Joules) | Pmax (W)")
-
-for run_freq in range (1_100_000, 3_900_001, 700_000):
-    run_test(run_freq, int(freq), mojitos_cmd)
+run_test(cpu_freq, read_freq, mojitos_cmd)

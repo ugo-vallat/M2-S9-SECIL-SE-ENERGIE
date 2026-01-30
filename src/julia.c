@@ -44,7 +44,7 @@ void* worker(void *arg) {
     unsigned start_index = id*BLOCK_SIZE;
     unsigned end_index = start_index + BLOCK_SIZE;
 
-    unsigned index, ite, l, c;
+    unsigned index, ite;
     double x,y, x2, y2, tmp;
 
     while (1) {
@@ -57,13 +57,13 @@ void* worker(void *arg) {
         }
 
         for (index = start_index; index < end_index; index++) {
-            l = index/IMG_DIM;
-            c = index%IMG_DIM;
+            // l = index/IMG_DIM;
+            // c = index%IMG_DIM;
 
-            if(c == 0 || l == 0) {
+            if(index%IMG_DIM == 0 || index/IMG_DIM == 0) {
                 ite = 1;
-                x = XMIN + l * (XMAX - XMIN) / (double)IMG_DIM;
-                y = YMAX - c * (YMAX - YMIN) / (double)IMG_DIM;
+                x = XMIN + index/IMG_DIM * (XMAX - XMIN) / (double)IMG_DIM;
+                y = YMAX - index%IMG_DIM * (YMAX - YMIN) / (double)IMG_DIM;
                 
                 x2 = x*x;
                 y2 = y*y;
@@ -82,13 +82,13 @@ void* worker(void *arg) {
                 continue;
             }
             
-            if(c > l) {
+            if(index%IMG_DIM > index/IMG_DIM) {
                 continue;
             }
 
             ite = 1;
-            x = XMIN + l * (XMAX - XMIN) / (double)IMG_DIM;
-            y = YMAX - c * (YMAX - YMIN) / (double)IMG_DIM;
+            x = XMIN + index/IMG_DIM * (XMAX - XMIN) / (double)IMG_DIM;
+            y = YMAX - index%IMG_DIM * (YMAX - YMIN) / (double)IMG_DIM;
             
             x2 = x*x;
             y2 = y*y;
@@ -103,7 +103,7 @@ void* worker(void *arg) {
             
             if (ite < ITE_MAX || (x2 + y2) > 4.0) {
                 img[index] = (unsigned int) ((4 * ite) & 0xFF) << 16 | ((2 * ite) & 0xFF) << 8 | ((6 * ite) & 0xFF);
-                // img[(IMG_DIM-l) * IMG_DIM + (IMG_DIM-c)] = img[index];
+                img[(IMG_DIM-index/IMG_DIM) * IMG_DIM + (IMG_DIM-index%IMG_DIM)] = img[index];
             }
             
         }

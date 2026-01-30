@@ -22,7 +22,6 @@ def _read_csv(filename):
     return df
 
 def run_one(read_freq, cmd) :
-    print(cmd)
     try:
         subprocess.run(cmd, check=True)
     except subprocess.CalledProcessError as e:
@@ -51,7 +50,6 @@ def run_test(freq, read_freq, algo, cmd):
         print(f"Error: Command failed with exit code {e.returncode}")
         sys.exit(e.returncode)
 
-    print("Freq config")
     duration_ns=0
     energy=0
     pmax=0

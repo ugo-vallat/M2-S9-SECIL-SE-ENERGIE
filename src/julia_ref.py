@@ -1,7 +1,7 @@
 import matplotlib.pyplot as plt
 import numpy as np
 
-taille = 800
+taille = 13
 xmin, xmax = -1, 1
 ymin, ymax = -1, 1
 iterationmax = 100
@@ -26,4 +26,5 @@ for line in range(taille):
                 pixels[col,line] = ((4*i)%256,(2*i)%256,(6*i)%256)
 
 plt.imshow(pixels)
-plt.show(block=True) 
+# plt.show(block=True) 
+plt.savefig("img_ref.png")

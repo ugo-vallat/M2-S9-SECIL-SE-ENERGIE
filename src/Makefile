@@ -1,5 +1,5 @@
 CC=gcc
-COMP_FLAG=-O0
+COMP_FLAG=-Ofast -march=native -DNDEBUG
 LIBS=-pthread -lpng
 APP_SRC=algos.c \
 		util_png.c \
